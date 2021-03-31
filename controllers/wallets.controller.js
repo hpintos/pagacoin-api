@@ -19,11 +19,10 @@ exports.get = ({ params }, res) => {
             return res.status(500).json({ message: err.message });
         }
         const wallets = JSON.parse(data);
-        const foundUser = wallets.find(wallet => {
+        const foundWallets = wallets.find(wallet => {
             return wallet.userId === params.userId;
         });
-
-        return res.status(200).json(foundUser);
+        return res.status(200).json(foundWallets || { wallets: [] });
 
     })
 };
@@ -44,7 +43,6 @@ exports.transfer = (req, res) => {
         const foundWalletReceiver = usersWallets.find(wallet => {
             return wallet.userId === receiverId;
         });
-        console.log({ amount });
         if (!foundWalletSender || !foundWalletReceiver) { return res.status(200).json({ valid: false, message: 'Transaction denied - incorrect input' }); }
 
         const senderWallet = foundWalletSender.wallets[senderWalletHash];
